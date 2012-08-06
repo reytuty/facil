@@ -1,6 +1,6 @@
 <?php
 include_once("library/facil3/navigation/http/HttpResult.class.php");
-include_once("facil3/core/controller/interface/HTTPControllerInterface.class.php");
+include_once("library/facil3/core/controller/interface/HTTPControllerInterface.class.php");
 include_once("library/facil3/core/modules/file/dao/FileDAO.class.php");
 
 class File implements HTTPControllerInterface{

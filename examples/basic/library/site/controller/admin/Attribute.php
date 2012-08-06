@@ -26,7 +26,7 @@ include_once(Config::FOLDER_APPLICATION."modules/composition/vo/CompositionVO.cl
 //include_once(Config::FOLDER_APPLICATION."modules/color/vo/ColorVO.class.php");
 
 
-include_once("facil3/core/controller/interface/HTTPControllerInterface.class.php");
+include_once("library/facil3/core/controller/interface/HTTPControllerInterface.class.php");
 include_once "library/facil3/core/http/HttpAdminGenericResult.class.php";
 
 include_once(Config::FOLDER_APPLICATION."controller/Admin.php");

@@ -1,6 +1,6 @@
 <?php
 include_once("library/facil3/navigation/http/HttpResult.class.php");
-include_once("facil3/core/controller/interface/HTTPControllerInterface.class.php");
+include_once("library/facil3/core/controller/interface/HTTPControllerInterface.class.php");
 include_once "library/facil3/core/http/HttpAdminGenericResult.class.php";
 include_once 'library/facil3/core/modules/category/dao/CategoryDAO.class.php';
 include_once("".Config::FOLDER_APPLICATION."/controller/Admin.php");

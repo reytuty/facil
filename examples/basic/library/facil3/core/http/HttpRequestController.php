@@ -6,7 +6,11 @@ include_once("library/facil3/utils/Debug.class.php");
 include_once("library/facil3/core/acl/UserClient.php");
 include_once("library/facil3/utils/ClassHandler.class.php");
 include_once "library/facil3/core/http/ReturnSearchClassVO.class.php";
-
+/**
+ * Resolve as requests em controllers e views
+ * @author Renato Miawaki - reytuty@gmail.com
+ *
+ */
 class HttpRequestController {
 	private $config;
 	static 	$UserClient;
@@ -14,25 +18,21 @@ class HttpRequestController {
 	public  $HttpResult;
 	const URI_RETURN_TYPE_STRING	= "URI_RETURN_TYPE_STRING";
 	const URI_RETURN_TYPE_ARRAY		= "URI_RETURN_TYPE_ARRAY";
-	public function __construct(){
+	public function __construct($door = ""){
 		//iniciando a config básico, a menos que exita outro config, este vai ser o que vai ficar valendo
-		include "configs/".str_replace(":8888", "", Navigation::getURIDomain())."/config.php";
+		$domain = Navigation::getURIDomain();
+		if($door){
+			//use em $door ":8080" por exemplo
+			$domain = str_replace($door, "", $domain);
+		}
+		include "configs/".$domain."/config.php";
 		//se não foi passado algum locale na url apos o nome do site faz um redirect passando o locale padrão
-		//echo Debug::li(Config::getAliasFolder());
 		$folders_array = Navigation::getURI(Config::getAliasFolder(), Navigation::URI_RETURN_TYPE_ARRAY);
-		
-		
-		//echo Debug::li(Config::getRootApplication());
-		//$folders_array = Navigation::getURI(Config::getAliasFolder(), Navigation::URI_RETURN_TYPE_ARRAY);
-		
 		$locale = Config::getLocale();
 		
 		Translation::setLocale($locale);
-		
 		//inicia e pega resultado da controller
 		$this->HttpResult = $this->getControllerResult();
-		
-		
 		//agora verifica que tipo de retorno esperado e chama a view, se for o caso		
 		$ignore_name = Config::getAliasFolder();
 		if(Config::getLocale()){
@@ -41,10 +41,6 @@ class HttpRequestController {
 		//url com trata com regras de rota
 		$url = explode("/", Config::rewriteUrl(Navigation::getURI($ignore_name, Navigation::URI_RETURN_TYPE_STRING)));
 		$retornoDaView = self::searchFile($url, Config::getFolderView());
-		//Navigation::searchFileOrFolder(Config::getRootApplication()."/".Config::getLocale(), Config::getFolderView(), Navigation::SEARCH_FILE_MODE_FILE);
-		
-		//echo Debug::li("retornoDaView");
-		//Debug::print_r($retornoDaView);
 		
 		if($retornoDaView->success){
 			//echo Debug::li("retornoDaView:".$retornoDaView->urlToInclude);
@@ -52,35 +48,24 @@ class HttpRequestController {
 		} else {
 			$this->view = Config::getFolderView()."/index.php";
 		}
-		//exit();
-		//Debug::print_r("[SEARCH_FILE_MODE_CLASS_AND_METHOD]:".Navigation::searchFileOrFolder(Config::FOLDER_ROOT_APPLICATION, "view/democrart/", Navigation::SEARCH_FILE_MODE_CLASS_AND_METHOD, "", TRUE));
 	}
 	/**
 	 * inicia a controller conforme configurado em navigation e retorna o resultado do metodo chamado
 	 * @return HttpResultVO
 	 */
 	private function getControllerResult(){
-		if(1 == 2){
-			$retornoDaController = new ReturnSearchClassVO();
-		}
 		$ignore_name = Config::getAliasFolder();
-		//echo $ignore_name;exit();
 		if(Config::getLocale()){
 			$ignore_name .= "/".Config::getLocale();
 		}
 		//url com trata com regras de rota
 		$url = explode("/", Config::rewriteUrl(Navigation::getURI($ignore_name, Navigation::URI_RETURN_TYPE_STRING)));
 		//inicia a controller
-		//echo Config::getRootApplication()."/".Navigation::getLocale();
 		$retornoDaController = self::searchController($url, Config::FOLDER_REQUEST_CONTROLER);
-		
-		
 		
 		//afiliados ( afiliate) reconhecer aqui a poss�vel origem do internauta atrav�s do restFolder afiliate.N
 		$arrayVariable   = Navigation::getVariableArraySlug($retornoDaController->arrayRestFolder);
 		
-		//echo Debug::li("retornoDaController");
-		//Debug::print_r($retornoDaController);
 		if(!$retornoDaController->success){
 			//pega o nome da classe para instanciar e executa o init
 			$tempExplode = explode("/", Config::URL_DEFAULT_CONTROLLER);
@@ -91,9 +76,6 @@ class HttpRequestController {
 			$retornoDaController->methodName = "init";
 			$retornoDaController->urlToInclude = Config::URL_DEFAULT_CONTROLLER;			
 		}
-		
-		//Debug::print_r($retornoDaController);
-		
 		$className = $retornoDaController->className;
 		$methodName = $retornoDaController->methodName;
 		//inclui a controller
@@ -104,8 +86,6 @@ class HttpRequestController {
 		if(!ClassHandler::isMethodPublic($instancia, $methodName)){
 			$methodName = "init";
 		}
-		//echo " $className  -> $methodName";
-		//exit();
 		$HttpResultVO = $instancia->$methodName();
 		
 		return $HttpResultVO;
@@ -208,35 +188,15 @@ class HttpRequestController {
 			if(($i) < count($array) ){
 				$currentFolder	= DataHandler::removeSpecialCharacters($array[$i]);
 			}
-			//echo Debug::li($currentFolder." = valor de currentFolder ", FALSE, "FFFF55");		
-			
-			$currentFolder = str_replace("/", "", $currentFolder);
-//			echo Debug::li($currentFolder." =>>> valor de currentFolder ", FALSE, "FFFF55");		
-
+			$currentFolder = str_replace("/", "", $currentFolder);		
 			//procurando folder
 			$searchFileOrFolderName = DataHandler::urlFolderNameToClassName($currentFolder);
-			//echo " valor de searchFileOrFolderName ";
-			//echo Debug::print_r($searchFileOrFolderName);
-			//echo "<br>";
-
 			$tempMetodo	= "init";
 			if(($i+1) < count($array)){
 				$tempMetodo	= DataHandler::urlFolderNameToMethodName($array[$i+1]);
 			}
-			
-//			echo Debug::li("<b>_startFolder:".$_startFolder."</b>", false, NULL, NULL, "00FFff");
-//			echo Debug::li("<b>stringPath:".$stringPath."</b>", false, NULL, NULL, "CC0000");
-//			echo Debug::li("<b>searchFileOrFolderName:".$searchFileOrFolderName."</b>", false, NULL, NULL, "CC0CC0");
-//			echo Debug::li("<b>tempMetodo:".$tempMetodo."</b>", false, NULL, NULL, "0000ff");
-//			echo $_startFolder;
-			//echo "<br>";
-//			var_dump($stringPath);
-			//echo $stringPath."/".$searchFileOrFolderName.".php";
 			$folderController = DataHandler::removeDobleBars($_startFolder."/".$stringPath."/".$searchFileOrFolderName.".php");
-			//echo Debug::li("<b>procurando no if:".$folderController."</b>", false, NULL, NULL, "0000ff");
 			if(file_exists($folderController)){
-			    
-				//echo Debug::li("<b>A classe:".$stringPath."/".$searchFileOrFolderName.".php </b>");
 				$returnReturnSearchClassVO->success 		= TRUE;
 				$returnReturnSearchClassVO->file 			= $searchFileOrFolderName.".php";
 				$returnReturnSearchClassVO->folder			= DataHandler::removeDobleBars($_startFolder."/".$stringPath."/");
@@ -245,7 +205,6 @@ class HttpRequestController {
 				$returnReturnSearchClassVO->methodName		= $tempMetodo;
 				$returnReturnSearchClassVO->arrayRestFolder = $arrayRestFolder;
 				$className 									= $returnReturnSearchClassVO->className;
-				
 				return $returnReturnSearchClassVO;
 			}
 			
@@ -262,45 +221,25 @@ class HttpRequestController {
 		$returnReturnSearchClassVO 	= new ReturnSearchClassVO();
 		$searchFileOrFolderName 	= "";//($searchFileOrFolderName != "")?"/".DataHandler::removeSpecialCharacters($searchFileOrFolderName):"";
 		//array completa sem a parte filtrada da url
-		//echo $search_file_mode;
-		//echo $_urlToIgnore;
 		$array = $array_url;
 			//Navigation::getURI($_urlToIgnore, Navigation::URI_RETURN_TYPE_ARRAY);
-		//Debug::print_r($array);
 				
 		$contador = 0;
 		//varredura de hierarquia invertida
 		for($i = count($array)-1; $i >= 0; $i--){
 			//pegando o string path, tirando o ultimo folder, pois estara no lastFolder
-			$stringPath 	= implode("/",  array_slice($array, 0 , $i));//Navigation::getURI($_url, Navigation::URI_RETURN_TYPE_STRING, $i+1);
-			//echo Debug::li($stringPath." = valor de stringPath ", FALSE, "FFFF00");		
-			
+			$stringPath 	= implode("/",  array_slice($array, 0 , $i));
 			$stringPath		= DataHandler::removeLastBar($stringPath);
-			//echo Debug::li($stringPath." = valor de stringPath ", FALSE, "FFFF00");		
-			
-			//echo Debug::li("if: ".($i+1)." < ".count($array));
 			$lastFolder	= DataHandler::removeSpecialCharacters($array[$i]);
-			//echo Debug::li($lastFolder." = valor de lastFolder AAAAAAAAAAA ", FALSE, "FFFF00");		
-			
 			//criando a array (além dos limites) - que não foi tratada
 			$contador++;
-			//echo Debug::li($contador." = valor de contador ", FALSE, "FFFF00");		
-			
-			//$arrayRestFolder = Navigation::getURI($_url, Navigation::URI_RETURN_TYPE_ARRAY, count($array), count($array)-$contador);
 			$arrayRestFolder = array_slice($array, count($array)-$contador , count($array));
-			//echo " valor de arrayRestFolder ";
-			//echo Debug::print_r($arrayRestFolder);		
-			
- 			$returnReturnSearchClassVO->arrayRestFolder = $arrayRestFolder;
+			$returnReturnSearchClassVO->arrayRestFolder = $arrayRestFolder;
 					//echo Debug::li("<b>{$i}</b>[11] Navigation::SEARCH_FILE_MODE_FILE : ".$_startFolder."----".$stringPath." ");
 					$searchFileOrFolderName = "";
 					//verifica se tem CAMINHO/ultimaPasta.php
-					
 					$caminhoBase = $_startFolder."/".trim($stringPath)."/".$lastFolder;
-					//echo Debug::li(" antes caminhoBase:".$caminhoBase);
-					
 					$caminhoBase = DataHandler::removeDobleBars(DataHandler::removeDobleBars($caminhoBase));
-					//echo Debug::li(" depois caminhoBase:".$caminhoBase);
 					if(file_exists($caminhoBase.".php")){
 						$returnReturnSearchClassVO->success 	= TRUE;
 						$returnReturnSearchClassVO->className 	= "";
@@ -311,7 +250,6 @@ class HttpRequestController {
 						return $returnReturnSearchClassVO;
 					}
 					//verifica se existe CAMINHO/ultimaPasta/index.php
-					//echo Debug::li("<b>AAA{$i}</b>[$stringPath] Navigation::SEARCH_FILE_MODE_FILE : ".$_startFolder.$stringPath."/index.php"." ");
 					if(file_exists($caminhoBase."/index.php")){
 						$returnReturnSearchClassVO->success 	= TRUE;
 						$returnReturnSearchClassVO->className 	= "";
@@ -370,6 +308,3 @@ class HttpRequestController {
 		return $url;
 	}
 }
-
-/* End of file welcome.php */
-/* Location: ./system/application/controllers/welcome.php */

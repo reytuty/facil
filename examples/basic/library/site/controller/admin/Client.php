@@ -4,14 +4,14 @@ include_once("library/facil3/navigation/http/HttpResult.class.php");
 include_once(Config::FOLDER_APPLICATION."modules/user_detail/dao/UserDetailDAO.class.php");
 include_once(Config::FOLDER_APPLICATION."modules/user_detail/vo/UserDetailVO.class.php");
 
-include_once("facil3/core/modules/user_address/dao/UserAddressDAO.class.php");
-include_once("facil3/core/modules/user_address/vo/UserAddressVO.class.php");
+include_once("library/facil3/core/modules/user_address/dao/UserAddressDAO.class.php");
+include_once("library/facil3/core/modules/user_address/vo/UserAddressVO.class.php");
 
-include_once("facil3/core/modules/address/dao/AddressDAO.class.php");
-include_once("facil3/core/modules/address/vo/AddressVO.class.php");
+include_once("library/facil3/core/modules/address/dao/AddressDAO.class.php");
+include_once("library/facil3/core/modules/address/vo/AddressVO.class.php");
 
-include_once("facil3/core/modules/state/dao/StateDAO.class.php");
-include_once("facil3/core/controller/interface/HTTPControllerInterface.class.php");
+include_once("library/facil3/core/modules/state/dao/StateDAO.class.php");
+include_once("library/facil3/core/controller/interface/HTTPControllerInterface.class.php");
 
 include_once("library/facil3/core/acl/UserClient.php");
 

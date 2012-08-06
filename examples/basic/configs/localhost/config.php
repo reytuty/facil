@@ -11,11 +11,8 @@ include_once("library/facil3/core/http/rewrite/RewriteRuleVO.class.php");
 
 
 class Config extends BaseConfig{
-	const TRANSACTION_TYPE_TRANSFER         = 'Transferência';
 	
 	const USER_TYPE_COMMON					= 4;
-	const USER_TYPE_AFFILIATE_ARQUITETO 	= 3;
-	const USER_TYPE_AFFILIATE_SITE			= 2;
 	
 	const USE_DATA_BASE 		= TRUE;
 	const DATA_BASE_DRIVER 		= "mysql";
@@ -23,8 +20,10 @@ class Config extends BaseConfig{
 	const DATA_BASE_NAME 		= "teto";
 	const DATA_BASE_USER 		= "root";
 	const DATA_BASE_PASSWORD	= ""; 
-	 
-	const USE_QUERY_CACHE 		= TRUE;
+	public static $DB_LINK;	// para singleton de conexao com o banco
+	
+	
+	const USE_QUERY_CACHE 		= FALSE;
 	const QUERY_CACHE_FOLDER 	= "query_cache/";
 	const QUERY_CACHE_TIME 		= 60;//em segundos
 	
@@ -33,11 +32,10 @@ class Config extends BaseConfig{
 	const FOLDER_REQUEST_CONTROLER	= "library/site/controller/";
 	const SYSTEM_MAIL				= "";
 	
-	const SYSTEM_MAIL_FROM  		= "contato@tetomc.com.br";
-	
-	const SYSTEM_MAIL_SMTP = "smtp.fernandoschroeder.com";
-	const SYSTEM_MAIL_LOGIN = "ana@fernandoschroeder.com";
- 	const SYSTEM_MAIL_PASSWORD = "q1w2e3";
+	const SYSTEM_MAIL_FROM  		= "";
+	const SYSTEM_MAIL_SMTP = "";
+	const SYSTEM_MAIL_LOGIN = "";
+ 	const SYSTEM_MAIL_PASSWORD = "";
 	
 	/**
 	 * @var string caso não seja setada locale, essa é a locale padrão
@@ -48,9 +46,8 @@ class Config extends BaseConfig{
 	 */
 	const TIME_LOGIN				= 600000;
 	
-	static $FOLDER_USER_INFO 		= "outra";
 	private static $array_modules_info;
-	public static $DB_LINK;	// para conexao com o banco
+	
 	/**
 	 * pasta root do padrão de rota
 	 * 
@@ -59,15 +56,13 @@ class Config extends BaseConfig{
 	const FOLDER_ROUTES            			= "library/site/routes/";
 }
 
-
-//futuramente passar isso para a controler iniciar
-include_once "library/facil3/core/acl/UserClient.php";
-
-
 Config::setFolderView("view/site/");
-Config::setRootApplication("teto/trunk");
-Config::setAliasFolder("teto/trunk");
-Config::setRootPath("http://localhost/teto/trunk/");
+//pastas necessarias para chegar até o index.php
+Config::setRootApplication("facil/facil/examples/basic/");
+//pastas necessarias para chegar até o index.php
+Config::setAliasFolder("facil/facil/examples/basic");
+
+Config::setRootPath("http://localhost/facil/facil/examples/basic/");
 
 Config::addModuleInfo("library/facil3/core/modules/image/dao/ImageDAO.class.php", "ImageDAO", "image");
 Config::addModuleInfo("library/facil3/core/modules/user/dao/UserDAO.class.php", "UserDAO", "user");
@@ -76,12 +71,6 @@ Config::addModuleInfo("library/facil3/core/modules/file/dao/FileDAO.class.php", 
 Config::addModuleInfo("library/facil3/core/modules/file/dao/FileDAO.class.php", "FileDAO", "file");
 Config::addModuleInfo("library/site/modules/content/dao/ContentSiteDAO.class.php", "ContentSiteDAO", "content");
 
-Config::addModuleInfo("library/facil3/core/modules/image/dao/ImageDAO.class.php", "ImageDAO", "dimensions");
-Config::addModuleInfo("library/facil3/core/modules/image/dao/ImageDAO.class.php", "ImageDAO", "video");
-Config::addModuleInfo("library/facil3/core/modules/image/dao/ImageDAO.class.php", "ImageDAO", "360");
 Config::addModuleInfo("library/facil3/core/modules/image/dao/ImageDAO.class.php", "ImageDAO", "gallery");
-Config::addModuleInfo("library/facil3/core/modules/image/dao/ImageDAO.class.php", "ImageDAO", "tagged");
-
-Config::addModuleInfo("library/site/modules/content/dao/ContentSiteDAO.class.php", "ContentSiteDAO", "newslatter");
 
 Session::start();

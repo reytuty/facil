@@ -6,7 +6,7 @@
  * @description	: Utilizada como objeto padrão para meta tags em VIEWS.
  * @Obs Essa Classe deve ser iniciada e manipulada obrigatóriamente apenas pela HttpContent.class.php
  **/
-include_once("facil3/utils/DataHandler.class.php");
+include_once("library/facil3/utils/DataHandler.class.php");
 class HttpHeader{
 
 	protected $title;

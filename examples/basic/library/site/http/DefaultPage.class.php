@@ -5,7 +5,7 @@
  * @version		: 1.0
  * @description	: Objeto Padrão para interface entre controllers e views
  **/
-include_once "facil3/navigation/http/HttpContent.class.php";
+include_once "library/facil3/navigation/http/HttpContent.class.php";
 class DefaultPage extends HttpContent{
 	public function __construct(){
 		parent::__construct();
