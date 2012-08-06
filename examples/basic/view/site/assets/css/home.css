@@ -1,0 +1,10 @@
+#products	{width:100%; position:absolute; top:104px; margin-left:4px; z-index:10;}
+/* Esse products era para #product detail /*
+ * #products	{width:100%; position:absolute; top:150px; margin-left:4px; z-index:10;}
+ */
+.products	{width:300px; height:188px; background:#fff; float:left; margin-right:4px; margin-top:4px; font-family:NettoWeb; font-size:14px; color:#fff;}
+.products:hover	{font-family:NettoWeb; font-size:14px; color:#000;}
+.products:hover .btMais  {float:right; margin-top:-21px; margin-right:4px; background:url('../images/bt-mais-over.png'); width:18px; height:18px;}
+.products .image    {float:left;}
+.products .title    {float:left; margin-top:-21px; margin-left:5px; }
+.products .btMais   {float:right; margin-top:-21px; margin-right:6px; background:url('../images/bt-mais.png'); width:18px; height:18px;}
