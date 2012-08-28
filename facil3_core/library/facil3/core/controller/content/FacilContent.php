@@ -87,7 +87,7 @@ class FacilContent extends GenericAdminController implements AbstractController{
     	if($table == NULL && $table_id < 1){
     		$ReturnResultVO->success = FALSE;
 			$ReturnResultVO->result = $this->array_content;
-			$ReturnResultVO->array_messages[] = Translation::text("Translation::text("LibraryLanguage::ERROR_CONTENT_NOT_FOUND")");
+			$ReturnResultVO->array_messages[] = Translation::text(LibraryLanguage::ERROR_CONTENT_NOT_FOUND);
 			return $ReturnResultVO;
 		}
 		//inicia a LinkDAO para fazer a consulta
