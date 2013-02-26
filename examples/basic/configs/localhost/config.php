@@ -14,10 +14,10 @@ class Config extends BaseConfig{
 	
 	const USER_TYPE_COMMON					= 4;
 	
-	const USE_DATA_BASE 		= TRUE;
+	const USE_DATA_BASE 		= FALSE;
 	const DATA_BASE_DRIVER 		= "mysql";
 	const DATA_BASE_SERVER 		= "127.0.0.1";
-	const DATA_BASE_NAME 		= "teto";
+	const DATA_BASE_NAME 		= "your_db";
 	const DATA_BASE_USER 		= "root";
 	const DATA_BASE_PASSWORD	= ""; 
 	public static $DB_LINK;	// para singleton de conexao com o banco

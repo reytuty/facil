@@ -137,8 +137,7 @@ class Navigation{
 		
 		if(is_array($siteName)){
 			for($i = 0; $i < count($siteName); $i++){
-				
-				if($url[$i] == $siteName[$i]){
+				if(isset($url[$i]) && $url[$i] == $siteName[$i]){
 					$url[$i] = "";
 				}
 			}
